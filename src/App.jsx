@@ -1,3 +1,4 @@
+import { useState } from "react";
 /* eslint-disable react/prop-types */
 const initialFriends = [
   {
@@ -19,17 +20,25 @@ const initialFriends = [
     balance: 0,
   },
 ];
+// Function***************************
 
 export default function App() {
-  // const [isOpen, setisOpen] = useState(false);
+  const [showAddFriend, setShowAddFriend] = useState(false);
+
+  // function to hide the form of addFriend
+  function handelShowAddFriend() {
+    setShowAddFriend((show) => !show);
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
         <FriendList />
-        <FormAddFriend />
-        <Button>Add Friend</Button>
+        {showAddFriend && <FormAddFriend />}
+        <Button onClick={handelShowAddFriend}>
+          {!showAddFriend ? "Add Friend" : "Close"}
+        </Button>
       </div>
-
       <FormSplitBill />
     </div>
   );
@@ -74,12 +83,16 @@ function Friend({ friend }) {
 
 // *************** Button component: because button is used in may places**************************
 
-function Button({ children }) {
-  return <button className="button">{children}</button>;
+function Button({ children, onClick }) {
+  return (
+    <button className="button" onClick={onClick}>
+      {children}
+    </button>
+  );
 }
 
 //************Add friend form Componenet **********************************************************
-function FormAddFriend() {
+function FormAddFriend({ han }) {
   return (
     <form className="form-add-friend">
       <label>🧑‍🤝‍🧑Name</label>
