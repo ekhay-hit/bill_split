@@ -92,13 +92,35 @@ function Button({ children, onClick }) {
 }
 
 //************Add friend form Componenet **********************************************************
-function FormAddFriend({ han }) {
+function FormAddFriend() {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("https://i.pravatar.cc/48");
+  function handleSubmit(e) {
+    console.log("I am here");
+    e.preventDefault();
+    const id = crypto.randomUUID();
+    const newFriend = {
+      name,
+      image: `${image}?=${id}`,
+      balance: 0,
+      id,
+    };
+    console.log(newFriend);
+  }
   return (
-    <form className="form-add-friend">
+    <form className="form-add-friend" onSubmit={handleSubmit}>
       <label>🧑‍🤝‍🧑Name</label>
-      <input type="text"></input>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      ></input>
       <label>🎞️ Image URL</label>
-      <input type="text"></input>
+      <input
+        type="text"
+        value={image}
+        onChange={(e) => setImage(e.target.value)}
+      ></input>
       <Button>Add</Button>
     </form>
   );
