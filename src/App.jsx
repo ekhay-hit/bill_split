@@ -36,6 +36,7 @@ export default function App() {
   // function to hide the form of addFriend
   function handelShowAddFriend() {
     setShowAddFriend((show) => !show);
+    setSelectedFriend(null);
   }
   // function that handel the freind that is selected
   function handleSelectedFriend(friend) {
@@ -157,22 +158,43 @@ function FormAddFriend({ onAddFriend }) {
 
 // *** Form split bill component ********************************************************************
 function FormSplitBill({ selectedFriend }) {
+  // state to updat the input values
+  const [bill, setBill] = useState("");
+  const [paidByUser, setPaidByUser] = useState("");
+  // state for how much friend need to pay, if no bill set paidByFirend to empty string
+  const paidByFriend = bill ? bill - paidByUser : "";
+  const [whoIsPaying, setWhoIsPaying] = useState("user");
   return (
     <form className="form-split-bill">
       <h2>SPILIT A BILL WITH {selectedFriend.name}</h2>
       <label>💰Bill value</label>
-      <input type="text" />
+      <input
+        type="text"
+        value={bill}
+        onChange={(e) => setBill(Number(e.target.value))}
+      />
 
       <label>🙎‍♂️Your expense</label>
-      <input type="text" disabled />
+      <input
+        type="text"
+        value={paidByUser}
+        onChange={(e) =>
+          setPaidByUser(
+            Number(e.target.value) > bill ? paidByUser : Number(e.target.value)
+          )
+        }
+      />
 
       <label>🧑‍🤝‍🧑{selectedFriend.name}'s expense</label>
-      <input type="text" value={selectedFriend.balance} />
+      <input type="text" value={paidByFriend} disabled />
 
       <label>💸Who is paying the bill</label>
-      <select>
+      <select
+        value={whoIsPaying}
+        onChange={(e) => setWhoIsPaying(e.target.value)}
+      >
         <option value="user">You</option>
-        <option value="friend">{name}</option>
+        <option value="friend">{selectedFriend.name}</option>
       </select>
       <Button>Split the bill</Button>
     </form>
