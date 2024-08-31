@@ -46,6 +46,20 @@ export default function App() {
     setShowAddFriend(false);
   }
 
+  // handel split bill function
+  function handleSplitBill(value) {
+    console.log(value);
+    setFriends((friends) =>
+      friends.map((friend) =>
+        friend.id === selectedFriend.id
+          ? { ...friend, balance: friend.balance + value }
+          : friend
+      )
+    );
+    // close the split bill window
+    setSelectedFriend(null);
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -59,7 +73,12 @@ export default function App() {
           {!showAddFriend ? "Add Friend" : "Close"}
         </Button>
       </div>
-      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
+      {selectedFriend && (
+        <FormSplitBill
+          selectedFriend={selectedFriend}
+          onSplitBill={handleSplitBill}
+        />
+      )}
     </div>
   );
 }
@@ -157,15 +176,25 @@ function FormAddFriend({ onAddFriend }) {
 }
 
 // *** Form split bill component ********************************************************************
-function FormSplitBill({ selectedFriend }) {
+function FormSplitBill({ selectedFriend, onSplitBill }) {
   // state to updat the input values
   const [bill, setBill] = useState("");
   const [paidByUser, setPaidByUser] = useState("");
   // state for how much friend need to pay, if no bill set paidByFirend to empty string
   const paidByFriend = bill ? bill - paidByUser : "";
   const [whoIsPaying, setWhoIsPaying] = useState("user");
+
+  // function that will handel the submit button and update the satate of the ballence of the friend
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!bill || !paidByUser) return;
+    // calling onSplit and passing the value either positive if user the one paid or negative if friend is the one
+    //paid,
+    onSplitBill(whoIsPaying === "user" ? paidByFriend : -paidByUser);
+  }
+
   return (
-    <form className="form-split-bill">
+    <form className="form-split-bill" onSubmit={handleSubmit}>
       <h2>SPILIT A BILL WITH {selectedFriend.name}</h2>
       <label>💰Bill value</label>
       <input
