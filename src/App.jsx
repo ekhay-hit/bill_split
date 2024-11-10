@@ -49,6 +49,7 @@ export default function App() {
   // handel split bill function
   function handleSplitBill(value) {
     console.log(value);
+    // loop through the array and update the ballance of the the friend that is selected
     setFriends((friends) =>
       friends.map((friend) =>
         friend.id === selectedFriend.id
@@ -77,6 +78,7 @@ export default function App() {
         <FormSplitBill
           selectedFriend={selectedFriend}
           onSplitBill={handleSplitBill}
+          key={selectedFriend.id}
         />
       )}
     </div>
